@@ -1,0 +1,395 @@
+USE [master]
+GO
+
+/****** Object:  Database [DW12]    Script Date: 10/2/2022 9:39:29 AM ******/
+CREATE DATABASE [DW12]
+ CONTAINMENT = NONE
+ ON  PRIMARY 
+( NAME = N'DW12', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL15.MSSQLSERVER\MSSQL\DATA\DW12.mdf' , SIZE = 73728KB , MAXSIZE = UNLIMITED, FILEGROWTH = 65536KB )
+ LOG ON 
+( NAME = N'DW12_log', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL15.MSSQLSERVER\MSSQL\DATA\DW12_log.ldf' , SIZE = 270336KB , MAXSIZE = 2048GB , FILEGROWTH = 65536KB )
+ WITH CATALOG_COLLATION = DATABASE_DEFAULT
+GO
+
+IF (1 = FULLTEXTSERVICEPROPERTY('IsFullTextInstalled'))
+begin
+EXEC [DW12].[dbo].[sp_fulltext_database] @action = 'enable'
+end
+GO
+
+ALTER DATABASE [DW12] SET ANSI_NULL_DEFAULT OFF 
+GO
+
+ALTER DATABASE [DW12] SET ANSI_NULLS OFF 
+GO
+
+ALTER DATABASE [DW12] SET ANSI_PADDING OFF 
+GO
+
+ALTER DATABASE [DW12] SET ANSI_WARNINGS OFF 
+GO
+
+ALTER DATABASE [DW12] SET ARITHABORT OFF 
+GO
+
+ALTER DATABASE [DW12] SET AUTO_CLOSE OFF 
+GO
+
+ALTER DATABASE [DW12] SET AUTO_SHRINK OFF 
+GO
+
+ALTER DATABASE [DW12] SET AUTO_UPDATE_STATISTICS ON 
+GO
+
+ALTER DATABASE [DW12] SET CURSOR_CLOSE_ON_COMMIT OFF 
+GO
+
+ALTER DATABASE [DW12] SET CURSOR_DEFAULT  GLOBAL 
+GO
+
+ALTER DATABASE [DW12] SET CONCAT_NULL_YIELDS_NULL OFF 
+GO
+
+ALTER DATABASE [DW12] SET NUMERIC_ROUNDABORT OFF 
+GO
+
+ALTER DATABASE [DW12] SET QUOTED_IDENTIFIER OFF 
+GO
+
+ALTER DATABASE [DW12] SET RECURSIVE_TRIGGERS OFF 
+GO
+
+ALTER DATABASE [DW12] SET  DISABLE_BROKER 
+GO
+
+ALTER DATABASE [DW12] SET AUTO_UPDATE_STATISTICS_ASYNC OFF 
+GO
+
+ALTER DATABASE [DW12] SET DATE_CORRELATION_OPTIMIZATION OFF 
+GO
+
+ALTER DATABASE [DW12] SET TRUSTWORTHY OFF 
+GO
+
+ALTER DATABASE [DW12] SET ALLOW_SNAPSHOT_ISOLATION OFF 
+GO
+
+ALTER DATABASE [DW12] SET PARAMETERIZATION SIMPLE 
+GO
+
+ALTER DATABASE [DW12] SET READ_COMMITTED_SNAPSHOT OFF 
+GO
+
+ALTER DATABASE [DW12] SET HONOR_BROKER_PRIORITY OFF 
+GO
+
+ALTER DATABASE [DW12] SET RECOVERY FULL 
+GO
+
+ALTER DATABASE [DW12] SET  MULTI_USER 
+GO
+
+ALTER DATABASE [DW12] SET PAGE_VERIFY CHECKSUM  
+GO
+
+ALTER DATABASE [DW12] SET DB_CHAINING OFF 
+GO
+
+ALTER DATABASE [DW12] SET FILESTREAM( NON_TRANSACTED_ACCESS = OFF ) 
+GO
+
+ALTER DATABASE [DW12] SET TARGET_RECOVERY_TIME = 60 SECONDS 
+GO
+
+ALTER DATABASE [DW12] SET DELAYED_DURABILITY = DISABLED 
+GO
+
+ALTER DATABASE [DW12] SET ACCELERATED_DATABASE_RECOVERY = OFF  
+GO
+
+ALTER DATABASE [DW12] SET QUERY_STORE = OFF
+GO
+
+ALTER DATABASE [DW12] SET  READ_WRITE 
+GO
+
+USE [DW12]
+GO
+
+/****** Object:  Table [dbo].[Almacen]    Script Date: 10/2/2022 9:40:13 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[Almacen](
+	[AlmacenID] [int] NOT NULL,
+	[Almacen] [nvarchar](50) NOT NULL,
+	[TerritorioID] [int] NULL,
+ CONSTRAINT [PK_Almacen] PRIMARY KEY CLUSTERED 
+(
+	[AlmacenID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[Almacen]  WITH CHECK ADD  CONSTRAINT [FK_Almacen_Territorio] FOREIGN KEY([TerritorioID])
+REFERENCES [dbo].[Territorio] ([TerritorioID])
+GO
+
+ALTER TABLE [dbo].[Almacen] CHECK CONSTRAINT [FK_Almacen_Territorio]
+GO
+
+USE [DW12]
+GO
+
+/****** Object:  Table [dbo].[Categoria]    Script Date: 10/2/2022 9:40:23 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[Categoria](
+	[CategoriaID] [int] NOT NULL,
+	[Categoria] [nvarchar](50) NOT NULL,
+ CONSTRAINT [PK_Categoria] PRIMARY KEY CLUSTERED 
+(
+	[CategoriaID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+USE [DW12]
+GO
+
+/****** Object:  Table [dbo].[Cliente]    Script Date: 10/2/2022 9:40:30 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[Cliente](
+	[ClienteID] [int] NOT NULL,
+	[Nombre] [nvarchar](50) NULL,
+	[Apellido] [nvarchar](50) NULL,
+ CONSTRAINT [PK_Cliente] PRIMARY KEY CLUSTERED 
+(
+	[ClienteID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+USE [DW12]
+GO
+
+/****** Object:  Table [dbo].[dim_Tiempo]    Script Date: 10/2/2022 9:40:39 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[dim_Tiempo](
+	[Fecha] [datetime] NOT NULL,
+	[Dia] [int] NOT NULL,
+	[Mes] [int] NOT NULL,
+	[Año] [int] NOT NULL
+	
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[dim_Tiempo]  WITH CHECK ADD  CONSTRAINT [FK_dim_Tiempo_Ventas] FOREIGN KEY([Mes])
+REFERENCES [dbo].[Ventas] ([VentaID])
+GO
+
+ALTER TABLE [dbo].[dim_Tiempo] CHECK CONSTRAINT [FK_dim_Tiempo_Ventas]
+GO
+
+USE [DW12]
+GO
+
+/****** Object:  Table [dbo].[Empleado]    Script Date: 10/2/2022 9:40:48 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[Empleado](
+	[EmpleadoID] [int] NOT NULL,
+	[Cargo] [nvarchar](50) NOT NULL,
+	[FechaNacimiento] [date] NOT NULL,
+	[EstadoCivil] [nchar](1) NOT NULL,
+	[Genero] [nchar](1) NOT NULL,
+	[FechaContratacion] [date] NOT NULL,
+	[HorasVacaciones] [smallint] NOT NULL,
+	[TerritorioID] [int] NULL,
+ CONSTRAINT [PK_Empleado] PRIMARY KEY CLUSTERED 
+(
+	[EmpleadoID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[Empleado]  WITH CHECK ADD  CONSTRAINT [FK_Empleado_Territorio] FOREIGN KEY([TerritorioID])
+REFERENCES [dbo].[Territorio] ([TerritorioID])
+GO
+
+ALTER TABLE [dbo].[Empleado] CHECK CONSTRAINT [FK_Empleado_Territorio]
+GO
+
+USE [DW12]
+GO
+
+/****** Object:  Table [dbo].[Pais]    Script Date: 10/2/2022 9:42:22 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[Pais](
+	[PaisID] [nvarchar](3) NOT NULL,
+	[Pais] [nvarchar](50) NOT NULL,
+ CONSTRAINT [PK_Pais] PRIMARY KEY CLUSTERED 
+(
+	[PaisID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+USE [DW12]
+GO
+
+/****** Object:  Table [dbo].[Productos]    Script Date: 10/2/2022 9:42:42 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[Productos](
+	[ProductoID] [int] NOT NULL,
+	[Producto] [nvarchar](50) NOT NULL,
+	[Color] [nvarchar](15) NULL,
+	[CategoriaID] [int] NULL,
+ CONSTRAINT [PK_Productos] PRIMARY KEY CLUSTERED 
+(
+	[ProductoID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[Productos]  WITH CHECK ADD  CONSTRAINT [FK_Productos_Categoria] FOREIGN KEY([CategoriaID])
+REFERENCES [dbo].[Categoria] ([CategoriaID])
+GO
+
+ALTER TABLE [dbo].[Productos] CHECK CONSTRAINT [FK_Productos_Categoria]
+GO
+
+USE [DW12]
+GO
+
+/****** Object:  Table [dbo].[Territorio]    Script Date: 10/2/2022 9:42:52 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[Territorio](
+	[TerritorioID] [int] NOT NULL,
+	[Territorio] [nvarchar](50) NOT NULL,
+	[PaisID] [nvarchar](3) NOT NULL,
+	[Grupo] [nvarchar](50) NOT NULL,
+ CONSTRAINT [PK_Territorio] PRIMARY KEY CLUSTERED 
+(
+	[TerritorioID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[Territorio]  WITH CHECK ADD  CONSTRAINT [FK_Territorio_Pais] FOREIGN KEY([PaisID])
+REFERENCES [dbo].[Pais] ([PaisID])
+GO
+
+ALTER TABLE [dbo].[Territorio] CHECK CONSTRAINT [FK_Territorio_Pais]
+GO
+
+USE [DW12]
+GO
+
+/****** Object:  Table [dbo].[Ventas]    Script Date: 10/2/2022 9:43:03 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[Ventas](
+	[VentaID] [int] NOT NULL,
+	[Fecha] [datetime] NOT NULL,
+	[FechaEnvio] [datetime] NULL,
+	[ClienteID] [int] NOT NULL,
+	[VendedorID] [int] NULL,
+	[TerritorioID] [int] NULL,
+	[Cantidad] [smallint] NOT NULL,
+	[ProductoID] [int] NOT NULL,
+	[Preciounitario] [money] NOT NULL,
+ CONSTRAINT [PK_Ventas] PRIMARY KEY CLUSTERED 
+(
+	[VentaID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[Ventas]  WITH CHECK ADD  CONSTRAINT [FK_Ventas_Cliente] FOREIGN KEY([ClienteID])
+REFERENCES [dbo].[Cliente] ([ClienteID])
+GO
+
+ALTER TABLE [dbo].[Ventas] CHECK CONSTRAINT [FK_Ventas_Cliente]
+GO
+
+ALTER TABLE [dbo].[Ventas]  WITH CHECK ADD  CONSTRAINT [FK_Ventas_Empleado] FOREIGN KEY([VendedorID])
+REFERENCES [dbo].[Empleado] ([EmpleadoID])
+GO
+
+ALTER TABLE [dbo].[Ventas] CHECK CONSTRAINT [FK_Ventas_Empleado]
+GO
+
+ALTER TABLE [dbo].[Ventas]  WITH CHECK ADD  CONSTRAINT [FK_Ventas_Productos] FOREIGN KEY([ProductoID])
+REFERENCES [dbo].[Productos] ([ProductoID])
+GO
+
+ALTER TABLE [dbo].[Ventas] CHECK CONSTRAINT [FK_Ventas_Productos]
+GO
+
+ALTER TABLE [dbo].[Ventas]  WITH CHECK ADD  CONSTRAINT [FK_Ventas_Territorio] FOREIGN KEY([TerritorioID])
+REFERENCES [dbo].[Territorio] ([TerritorioID])
+GO
+
+ALTER TABLE [dbo].[Ventas] CHECK CONSTRAINT [FK_Ventas_Territorio]
+GO
+
+
+
+
+delete from Almacen;
+delete from Categoria;
+delete from Cliente;
+delete from Detalleventa;
+delete from dim_Tiempo;
+delete from Empleado;
+delete from Pais;
+delete from Productos;
+delete from Territorio;
+delete from Venta;
+
+
+use "DW12"
+go
+exec sp_changedbowner 'sa'
+
